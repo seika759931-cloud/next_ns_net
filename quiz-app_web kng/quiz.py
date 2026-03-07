@@ -11,7 +11,7 @@ question_limit = None
 
 category_map = {
     "t1": "必修", "t2": "人体", "t3": "疾病", "t4": "社会", "t5": "基礎",
-    "t6": "成人", "t7": "老年", "t8": "小児", "t9": "母子", "t10": "精神", "t11": "在宅", "t12": "統合",
+    "t6": "成人", "t7": "老年", "t8": "小児", "t9": "母性", "t10": "精神", "t11": "在宅", "t12": "統合",
 }
 
 def load_csv(text):
@@ -95,4 +95,5 @@ def get_score():
     return score
 
 def get_total_questions():
+
     return question_limit if question_limit else len(qlist)

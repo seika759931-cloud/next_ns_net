@@ -16,12 +16,21 @@
             margin: 20px;
             line-height: 1.8;
         }
-        h1 {
-            font-size: 40px;
-            background: yellow;
-            padding: 5px;
-            display: inline-block;
+        .logo-box {
+            background-color: #ffeb3b; /* 黄色背景 */
+            padding: 30px 0;
+            text-align: center;
         }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1e88e5; /* 青文字 */
+            margin: 0;
+            -webkit-box-reflect: below 5px
+            linear-gradient(transparent, rgba(0,0,0,0.2)); /* 反射 */
+        }
+        
         .section-title {
             font-size: 24px;
             background: aqua;
@@ -40,8 +49,10 @@
 </head>
 
 <body>
-
-    <h1>Next Ns, Net</h1>
+    <div class="logo-box">
+    <h1 class="logo">NEXT Ns, Net</h1>
+</div>
+    
 
     <p>看護の勉強のためのウェブサイトです。</p>
     <hr>
@@ -70,6 +81,7 @@
 </body>
 
 </html>
+
 
 
 

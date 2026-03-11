@@ -95,5 +95,4 @@ def get_score():
     return score
 
 def get_total_questions():
-
     return question_limit if question_limit else len(qlist)

@@ -30,6 +30,19 @@ function startQuiz() {
   showScreen("category-screen");
 }
 
+function saveHistory(question, choices, correct, userAnswer) {
+    const history = JSON.parse(localStorage.getItem("history") || "[]");
+
+    history.push({
+        question: question,
+        choices: choices,
+        correct: correct,
+        userAnswer: userAnswer,
+        time: new Date().toLocaleString()
+    });
+
+    localStorage.setItem("history", JSON.stringify(history));
+}
 
 async function selectCategory(key) {
   await pyodide.runPythonAsync(`set_category("${key}")`);
@@ -38,6 +51,7 @@ async function selectCategory(key) {
 
 
 async function startQuizWithCount() {
+  localStorage.removeItem("history");
   let count = document.getElementById("num-questions").value;
   await pyodide.runPythonAsync(`set_question_count(${count})`);
   showScreen("question-screen");
@@ -85,14 +99,23 @@ async function nextQuestion() {
     let btn = document.createElement("button");
     btn.textContent = choice;
     btn.onclick = async () => {
-      let choiceText = JSON.stringify(btn.textContent);
-      let result = await pyodide.runPythonAsync(`check_answer_text(${q.index}, ${choiceText})`);
-      let explanationText = q.explanation ?? "";
-      document.getElementById("explanation-text").textContent = result
+    let choiceText = JSON.stringify(btn.textContent);
+    let result = await pyodide.runPythonAsync(`check_answer_text(${q.index}, ${choiceText})`);
+    let explanationText = q.explanation ?? "";
+
+    // ★★★ ここで履歴保存 ★★★
+    saveHistory(
+        q.question,
+        choices,
+        q.explanation,      // ← Python側で正解を返してるなら q.correct を使う
+        btn.textContent
+    );
+
+    document.getElementById("explanation-text").textContent = result
         ? `正解！\n${explanationText}`
         : `不正解…\n${explanationText}`;
-      showScreen("explanation-screen");
-    };
+    showScreen("explanation-screen");
+};
     choicesDiv.appendChild(btn);
   });
 }

@@ -61,7 +61,8 @@ async function startQuizWithCount() {
 
 async function nextQuestion() {
   showScreen("question-screen"); 
-  
+  await new Promise(r => setTimeout(r, 0));  // ← DOM 更新待ち
+
   let q = await pyodide.runPythonAsync("get_next_question()");
   q = q.toJs();
   q = Object.fromEntries(q);   // ←ここ追加！
@@ -124,7 +125,7 @@ async function nextQuestion() {
   });
 }
 
-function goNextFromExplanation() {
+async function goNextFromExplanation() {
   nextQuestion();
   showScreen("question-screen");
 }
@@ -158,4 +159,5 @@ async function showResult() {
 
 
 window.onload = initPyodide;
+
 

@@ -1,3 +1,4 @@
+
 let pyodide = null;
 
 async function initPyodide() {
@@ -61,7 +62,8 @@ async function startQuizWithCount() {
 
 async function nextQuestion() {
   showScreen("question-screen"); 
-  
+  await new Promise(r => setTimeout(r, 0));  // ← DOM 更新待ち
+
   let q = await pyodide.runPythonAsync("get_next_question()");
   q = q.toJs();
   q = Object.fromEntries(q);   // ←ここ追加！
@@ -75,7 +77,11 @@ async function nextQuestion() {
     return;
   }
   console.log("終了判定用:", q);
-
+  // ② 次に現在の問題番号を取得
+  let current = q.index + 1;   // ← これだけでOK！
+  let total = await pyodide.runPythonAsync("get_total_questions()");
+  document.getElementById("question-count").textContent = `第 ${current}/${total}問`;
+  
   document.getElementById("question-text").textContent = q.question;
   let choicesDiv = document.getElementById("choices");
   choicesDiv.innerHTML = "";
@@ -120,7 +126,7 @@ async function nextQuestion() {
   });
 }
 
-function goNextFromExplanation() {
+async function goNextFromExplanation() {
   nextQuestion();
   showScreen("question-screen");
 }
@@ -154,3 +160,7 @@ async function showResult() {
 
 
 window.onload = initPyodide;
+
+
+
+

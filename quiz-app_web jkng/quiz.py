@@ -13,18 +13,20 @@ category_map = {
     "t1": "人体", "t2": "栄養", "t3": "薬理", "t4": "疾病", "t5": "保健",
     "t6": "看護", "t7": "基礎", "t8": "成人", "t9": "老年", "t10": "母子", "t11": "精神",
 }
-
 def load_csv(text):
     global questions
+    # CSV読み込み
     df = pd.read_csv(StringIO(text), on_bad_lines="skip")
-    df.fillna("", inplace=True)  # 欠損値を空文字に
+    df.fillna("", inplace=True)
+    
+    # records形式に変換することで、各行が {'id': '1-1', 'question': '...', 'img': 'img/1.png', ...} という辞書になります
     questions = df.to_dict(orient="records")
-
+    
 def set_category(key):
     global selected_category, current_index, score, qlist
     current_index = 0
     score = 0
-    if key == "t12":
+    if key == "t13":
         selected_category = None  # 全カテゴリ
     else:
         selected_category = category_map.get(key)

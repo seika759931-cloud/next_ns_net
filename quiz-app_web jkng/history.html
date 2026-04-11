@@ -9,12 +9,7 @@
     padding: 20px;
     background: #fdfdfd;
   }
-
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-
+  h1 { font-size: 24px; margin-bottom: 20px; }
   .item {
     background: #fff;
     border: 1px solid #ddd;
@@ -22,23 +17,21 @@
     margin-bottom: 12px;
     border-radius: 6px;
   }
-
-  .correct {
-    color: #1e88e5;
-    font-weight: bold;
+  /* 正解・不正解の色分け */
+  .correct { color: #1e88e5; font-weight: bold; }
+  .wrong { color: #e53935; font-weight: bold; }
+  
+  /* 解説文のスタイル */
+  .explanation-box {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dotted #ccc;
+    font-size: 14px;
+    color: #444;
+    white-space: pre-wrap; /* 改行を反映させる */
   }
 
-  .wrong {
-    color: #e53935;
-    font-weight: bold;
-  }
-
-  .time {
-    font-size: 12px;
-    color: #666;
-    margin-top: 6px;
-  }
-
+  .time { font-size: 12px; color: #666; margin-top: 6px; }
   .btn {
     display: inline-block;
     margin-top: 20px;
@@ -56,22 +49,32 @@
 <h1>解いた問題の履歴</h1>
 <div id="history"></div>
 
-<!-- ★ ここは HTML の外側に置く！ -->
 <a href="index.html" class="btn">もう一度挑戦する</a>
 
 <script>
-const history = JSON.parse(localStorage.getItem("history") || "[]");
+// ローカルストレージからデータを取得（キー名が "history" であることを確認）
+const historyData = JSON.parse(localStorage.getItem("quizHistory") || localStorage.getItem("history") || "[]");
 
 let html = "";
-history.forEach((item, index) => {
-  const isCorrect = item.userAnswer === item.correct;
+historyData.forEach((item, index) => {
+  // 保存した時のプロパティ名（item.correctAnswer か item.correct）に合わせる
+  const correctText = item.correctAnswer || item.correct || "不明";
+  const explanationText = item.explanation || "解説はありません。";
+  
+  // ユーザーの答えと正解を比較して色を変える
+  const isCorrect = item.userChoice === correctText || item.userAnswer === correctText;
 
   html += `
     <div class="item">
       <div><strong>${index + 1}. ${item.question}</strong></div>
-      <div>あなたの答え：<span class="${isCorrect ? "correct" : "wrong"}">${item.userAnswer}</span></div>
-      <div>正解：${item.correct}</div>
-      <div class="time">${item.time}</div>
+      <div>あなたの答え：<span class="${isCorrect ? "correct" : "wrong"}">${item.userChoice || item.userAnswer}</span></div>
+      <div>正解：<span class="correct">${correctText}</span></div>
+      
+      <div class="explanation-box">
+        <strong>【解説】</strong><br>${explanationText}
+      </div>
+
+      <div class="time">${item.date || item.time}</div>
     </div>
   `;
 });

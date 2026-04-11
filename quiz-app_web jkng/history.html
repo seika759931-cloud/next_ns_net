@@ -68,7 +68,6 @@ historyData.forEach((item, index) => {
     <div class="item">
       <div><strong>${index + 1}. ${item.question}</strong></div>
       <div>あなたの答え：<span class="${isCorrect ? "correct" : "wrong"}">${item.userChoice || item.userAnswer}</span></div>
-      <div>正解：<span class="correct">${correctText}</span></div>
       
       <div class="explanation-box">
         <strong>【解説】</strong><br>${explanationText}

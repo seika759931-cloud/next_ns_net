@@ -138,12 +138,22 @@ async function nextQuestion() {
 
                 // --- 解説テキストの反映 ---
                 let explanationBody = q.explanation ?? "";
+
+                // 【追加】解説の1行目から「正解：」の後の文字だけを抜き出す
+                let correctAnswer = "";
+                if (explanationBody.includes("正解：")) {
+                    correctAnswer = explanationBody.split('\n')[0].replace("正解：", "").trim();
+                } else {
+                    correctAnswer = "解説参照"; // 万が一「正解：」が含まれない場合の保険
+                }
+
                 document.getElementById("explanation-text").textContent = result
                     ? `【正解！】\n\n${explanationBody}`
                     : `【不正解…】\n\n${explanationBody}`;
 
                 // 履歴保存
-                saveHistory(q.question, choices, q.explanation, btn.textContent);
+                // 引数の順番：(問題, 選択肢, 解説全文, ユーザーの答え, 抽出した正解)
+                saveHistory(q.question, choices, explanationBody, btn.textContent, correctAnswer);
 
                 showScreen("explanation-screen");
             };
